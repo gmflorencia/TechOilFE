@@ -1,6 +1,13 @@
 ﻿@{
     Layout = null;
 }
+
+@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 <!doctype html>
 <html lang="en">
 <head>
