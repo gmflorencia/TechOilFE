@@ -1,11 +1,14 @@
-﻿@model TechOilFE.Models.Login
+﻿@model TechOilFE.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
-   @Html.NameFor(x => x.Email)
+
 }
+
+@Html.HiddenFor(x=> x.Token);
 
 <div class="text-center">
     <h1 class="display-4">Bienvenidos a Tech Oil</h1>
-  
-   
 </div>
+
+<script src="~/js/Home/Home.js"> </script>
+<img src="~/images/ParqueEolico.jpg" alt="Descripción de la imagen" style="width: 1300px; height: 533px;" />

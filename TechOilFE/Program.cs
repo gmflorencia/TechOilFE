@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +9,29 @@ builder.Services.AddHttpClient("useApi", config =>
     config.BaseAddress = new Uri(builder.Configuration["ServiceUrl:ApiUrl"]);
 });
 
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config =>
+{
+    config.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.Redirect("https://localhost:7098");
+        return Task.CompletedTask;
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ADMINISTRADOR", policy =>
+    {
+        policy.RequireRole("Administrador");
+    });
+});
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -23,7 +48,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
